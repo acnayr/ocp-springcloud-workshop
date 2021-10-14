@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  redis_conf:
+    image: my-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    depends_on:
+      - rabbitmq
+    command:
+      - /bin/sh
+      - -c
+      - |
+        nohup redis-server --loadmodule /var/opt/redislabs/lib/modules/redisgears.so PythonHomeDir /opt/redislabs/lib/modules/python3 &
+        sleep 5
+        echo "Adding some default key value"
+        redis-cli HSET dolab-configclient-java-dev app.enableAFeature false app.newFeatureTitle "Caracteristica en desarrollo" app.newFeatureDesc "Nueva Descripcion"
+        redis-cli HSET dolab-configclient-java app.enableAFeature true app.newFeatureTitle "Nueva Caracteristica" app.newFeatureDesc "Nueva Descripcion de Caracteristica"
+        redis-cli config set notify-keyspace-events KEA
+        echo "Default key value added"
+        echo "Listing enabled modules"
+        redis-cli info modules
+        echo "Registring listener that will automatically write each event to a Stream"
+        gears-cli run register.py
+        echo "Listener registered"
+        # this will keep container running
+        tail -f /dev/null
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    depends_on:
+      - redis_conf
+    environment:
+      - REDIS_HOSTS=redis_conf:redis_conf
+    ports:
+      - 8081:8081

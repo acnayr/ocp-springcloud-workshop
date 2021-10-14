@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "app",
+      "type": "co.com.ibm.dolab.client.model.ClientConfiguration",
+      "sourceType": "co.com.ibm.dolab.client.model.ClientConfiguration"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.enable-a-feature",
+      "type": "java.lang.Boolean",
+      "sourceType": "co.com.ibm.dolab.client.model.ClientConfiguration"
+    },
+    {
+      "name": "app.new-feature-desc",
+      "type": "java.lang.String",
+      "sourceType": "co.com.ibm.dolab.client.model.ClientConfiguration"
+    },
+    {
+      "name": "app.new-feature-title",
+      "type": "java.lang.String",
+      "sourceType": "co.com.ibm.dolab.client.model.ClientConfiguration"
+    }
+  ],
+  "hints": []
+}

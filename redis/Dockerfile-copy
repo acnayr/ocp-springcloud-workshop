@@ -1,0 +1,14 @@
+FROM redis
+
+RUN apt-get update -qq
+RUN apt-get upgrade -y
+RUN apt-get install -y git
+RUN apt-get install -y build-essential
+RUN git clone https://github.com/RedisGears/RedisGears.git
+RUN cd RedisGears && git submodule update --init --recursive
+RUN cd RedisGears && ./deps/readies/bin/getpy2
+RUN cd RedisGears && make setup
+RUN cd RedisGears && make fetch
+RUN cd RedisGears && make all
+
+COPY register.py register.py
